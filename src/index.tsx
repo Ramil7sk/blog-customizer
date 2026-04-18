@@ -21,7 +21,7 @@ const App = () => {
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': articleState.fontFamilyOption.value,
+					'--font-family': `'${articleState.fontFamilyOption.value}'`,
 					'--font-size': articleState.fontSizeOption.value,
 					'--font-color': articleState.fontColor.value,
 					'--container-width': articleState.contentWidth.value,
