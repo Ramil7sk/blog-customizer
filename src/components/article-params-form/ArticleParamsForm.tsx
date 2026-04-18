@@ -30,12 +30,10 @@ export const ArticleParamsForm = ({
 	setArticleState,
 }: ArticleParamsFormProps) => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	// Локальное состояние формы
 	const [formState, setFormState] = useState<ArticleStateType>(articleState);
 
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	// Логика закрытия при клике вне области формы
 	useOutsideClickClose({
 		isOpen: isSidebarOpen,
 		rootRef: containerRef,
@@ -45,15 +43,23 @@ export const ArticleParamsForm = ({
 
 	const toggleMenu = () => setIsSidebarOpen(!isSidebarOpen);
 
+	// Добавляем ту самую универсальную функцию-обработчик
+	const handleFormChange = <K extends keyof ArticleStateType>(
+		field: K,
+		value: ArticleStateType[K]
+	) => {
+		setFormState((prev) => ({ ...prev, [field]: value }));
+	};
+
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		setArticleState(formState); // Применяем черновик к статье
+		setArticleState(formState);
 	};
 
 	const handleReset = (e: FormEvent) => {
 		e.preventDefault();
-		setArticleState(defaultArticleState); // Сброс статьи к дефолту
-		setFormState(defaultArticleState); // Сброс формы
+		setArticleState(defaultArticleState);
+		setFormState(defaultArticleState);
 	};
 
 	return (
@@ -71,13 +77,12 @@ export const ArticleParamsForm = ({
 						Задайте параметры
 					</Text>
 
+					{/* Заменяем все onChange на вызов нашей функции */}
 					<Select
 						title='Шрифт'
 						selected={formState.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={(option) =>
-							setFormState({ ...formState, fontFamilyOption: option })
-						}
+						onChange={(option) => handleFormChange('fontFamilyOption', option)}
 					/>
 
 					<RadioGroup
@@ -85,18 +90,14 @@ export const ArticleParamsForm = ({
 						title='Размер шрифта'
 						selected={formState.fontSizeOption}
 						options={fontSizeOptions}
-						onChange={(option) =>
-							setFormState({ ...formState, fontSizeOption: option })
-						}
+						onChange={(option) => handleFormChange('fontSizeOption', option)}
 					/>
 
 					<Select
 						title='Цвет шрифта'
 						selected={formState.fontColor}
 						options={fontColors}
-						onChange={(option) =>
-							setFormState({ ...formState, fontColor: option })
-						}
+						onChange={(option) => handleFormChange('fontColor', option)}
 					/>
 
 					<Separator />
@@ -105,18 +106,14 @@ export const ArticleParamsForm = ({
 						title='Цвет фона'
 						selected={formState.backgroundColor}
 						options={backgroundColors}
-						onChange={(option) =>
-							setFormState({ ...formState, backgroundColor: option })
-						}
+						onChange={(option) => handleFormChange('backgroundColor', option)}
 					/>
 
 					<Select
 						title='Ширина контента'
 						selected={formState.contentWidth}
 						options={contentWidthArr}
-						onChange={(option) =>
-							setFormState({ ...formState, contentWidth: option })
-						}
+						onChange={(option) => handleFormChange('contentWidth', option)}
 					/>
 
 					<div className={styles.bottomContainer}>
