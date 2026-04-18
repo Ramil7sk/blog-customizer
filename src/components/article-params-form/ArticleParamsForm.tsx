@@ -29,21 +29,21 @@ export const ArticleParamsForm = ({
 	articleState,
 	setArticleState,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	// Локальное состояние формы
 	const [formState, setFormState] = useState<ArticleStateType>(articleState);
 
-	const rootRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	// Логика закрытия при клике вне области формы
 	useOutsideClickClose({
-		isOpen,
-		rootRef,
-		onChange: setIsOpen,
-		onClose: () => setIsOpen(false),
+		isOpen: isSidebarOpen,
+		rootRef: containerRef,
+		onChange: setIsSidebarOpen,
+		onClose: () => setIsSidebarOpen(false),
 	});
 
-	const toggleMenu = () => setIsOpen(!isOpen);
+	const toggleMenu = () => setIsSidebarOpen(!isSidebarOpen);
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -57,10 +57,12 @@ export const ArticleParamsForm = ({
 	};
 
 	return (
-		<div ref={rootRef}>
-			<ArrowButton isOpen={isOpen} onClick={toggleMenu} />
+		<div ref={containerRef}>
+			<ArrowButton isOpen={isSidebarOpen} onClick={toggleMenu} />
 			<aside
-				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
+				className={clsx(styles.container, {
+					[styles.container_open]: isSidebarOpen,
+				})}>
 				<form
 					className={styles.form}
 					onSubmit={handleSubmit}
